@@ -3,8 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-const clientId =
-  "595246114359-01oh2cfl6i47o5v6e83af40lt9fs97vc.apps.googleusercontent.com";
+const clientId = "process.env.REACT_APP_FIREBASE_CliENT_ID";
 
 ReactDOM.render(
   <GoogleOAuthProvider clientId={clientId}>

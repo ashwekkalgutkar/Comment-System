@@ -5,8 +5,7 @@ import { collection, addDoc } from "firebase/firestore";
 import Auth from "./components/Auth";
 import CommentInput from "./components/CommentInput";
 import CommentList from "./components/CommentList";
-import { Container, AppBar, Toolbar, Button } from "@mui/material";
-import GoogleIcon from "@mui/icons-material/Google";
+import { Container, AppBar, Toolbar } from "@mui/material";
 
 const App = () => {
   const [user] = useAuthState(auth);

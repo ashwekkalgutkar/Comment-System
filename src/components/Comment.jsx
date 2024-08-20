@@ -4,13 +4,18 @@ import { formatDistanceToNow } from 'date-fns';
 const Comment = ({ author, content, timestamp, likes, replies }) => {
   const [showReplies, setShowReplies] = useState(false);
 
+  // Ensure timestamp is defined and has the 'seconds' property
+  const formattedTimestamp = timestamp && timestamp.seconds
+    ? formatDistanceToNow(new Date(timestamp.seconds * 1000), { addSuffix: true })
+    : "Unknown time";
+
   return (
     <div className="bg-white rounded-lg shadow-md p-4 mb-4">
       <div className="flex items-center mb-2">
         <img src={`https://ui-avatars.com/api/?name=${author}&background=random`} alt={author} className="w-8 h-8 rounded-full mr-2" />
         <div>
           <p className="font-semibold">{author}</p>
-          <p className="text-xs text-gray-500">{formatDistanceToNow(new Date(timestamp.seconds * 1000), { addSuffix: true })}</p>
+          <p className="text-xs text-gray-500">{formattedTimestamp}</p>
         </div>
       </div>
       <p className="mb-2">{content}</p>
@@ -25,7 +30,7 @@ const Comment = ({ author, content, timestamp, likes, replies }) => {
           <button onClick={() => setShowReplies(!showReplies)}>
             {showReplies ? 'Hide' : 'Show'} {replies.length} replies
           </button>
-        )}  
+        )}
       </div>
       {showReplies && (
         <div className="ml-8 mt-4">
