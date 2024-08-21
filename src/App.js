@@ -3,7 +3,7 @@ import {
   AppBar,
   Toolbar,
   Container,
-  IconButton,
+  // IconButton,
   Button,
   Box,
 } from "@mui/material";
@@ -11,9 +11,9 @@ import GoogleButton from "react-google-button";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import { v4 as uuidv4 } from "uuid";
+// import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+// import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+// import { v4 as uuidv4 } from "uuid";
 import { CommentSection } from "react-comments-section";
 import "react-comments-section/dist/index.css";
 import PersonIcon from "@mui/icons-material/Person";
@@ -50,104 +50,104 @@ const App = () => {
       });
   };
 
-  const handleCommentSubmit = () => {
-    if (!user) {
-      alert("Please log in to comment");
-      return;
-    }
+  // const handleCommentSubmit = () => {
+  //   if (!user) {
+  //     alert("Please log in to comment");
+  //     return;
+  //   }
 
-    if (commentText.trim() === "") {
-      alert("Comment cannot be empty");
-      return;
-    }
+  //   if (commentText.trim() === "") {
+  //     alert("Comment cannot be empty");
+  //     return;
+  //   }
 
-    const newComment = {
-      userId: user.uid,
-      comId: uuidv4(),
-      fullName: user.displayName,
-      userProfile: user.photoURL,
-      text: commentText,
-      avatarUrl: user.photoURL, // Use the user's profile picture
-      replies: [],
-      likes: 0,
-      dislikes: 0,
-      userLikes: [],
-      userDislikes: [],
-    };
+  //   const newComment = {
+  //     userId: user.uid,
+  //     comId: uuidv4(),
+  //     fullName: user.displayName,
+  //     userProfile: user.photoURL,
+  //     text: commentText,
+  //     avatarUrl: user.photoURL, // Use the user's profile picture
+  //     replies: [],
+  //     likes: 0,
+  //     dislikes: 0,
+  //     userLikes: [],
+  //     userDislikes: [],
+  //   };
 
-    if (replyingTo) {
-      // Add reply to the specific comment
-      setCommentsData(
-        commentsData.map((comment) =>
-          comment.comId === replyingTo
-            ? {
-                ...comment,
-                replies: [...comment.replies, newComment],
-              }
-            : comment
-        )
-      );
-      setReplyingTo(null); // Reset reply state
-    } else {
-      // Add new comment
-      setCommentsData([...commentsData, newComment]);
-    }
+  //   if (replyingTo) {
+  //     // Add reply to the specific comment
+  //     setCommentsData(
+  //       commentsData.map((comment) =>
+  //         comment.comId === replyingTo
+  //           ? {
+  //               ...comment,
+  //               replies: [...comment.replies, newComment],
+  //             }
+  //           : comment
+  //       )
+  //     );
+  //     setReplyingTo(null); // Reset reply state
+  //   } else {
+  //     // Add new comment
+  //     setCommentsData([...commentsData, newComment]);
+  //   }
 
-    setCommentText("");
-  };
+  //   setCommentText("");
+  // };
 
-  const handleLike = (comId) => {
-    setCommentsData(
-      commentsData.map((comment) =>
-        comment.comId === comId
-          ? {
-              ...comment,
-              likes: comment.userLikes.includes(user?.uid)
-                ? comment.likes - 1
-                : comment.likes + 1,
-              dislikes: comment.userDislikes.includes(user?.uid)
-                ? comment.dislikes - 1
-                : comment.dislikes,
-              userLikes: comment.userLikes.includes(user?.uid)
-                ? comment.userLikes.filter((id) => id !== user?.uid)
-                : [...comment.userLikes, user?.uid],
-              userDislikes: comment.userDislikes.includes(user?.uid)
-                ? comment.userDislikes.filter((id) => id !== user?.uid)
-                : comment.userDislikes,
-            }
-          : comment
-      )
-    );
-  };
+  // const handleLike = (comId) => {
+  //   setCommentsData(
+  //     commentsData.map((comment) =>
+  //       comment.comId === comId
+  //         ? {
+  //             ...comment,
+  //             likes: comment.userLikes.includes(user?.uid)
+  //               ? comment.likes - 1
+  //               : comment.likes + 1,
+  //             dislikes: comment.userDislikes.includes(user?.uid)
+  //               ? comment.dislikes - 1
+  //               : comment.dislikes,
+  //             userLikes: comment.userLikes.includes(user?.uid)
+  //               ? comment.userLikes.filter((id) => id !== user?.uid)
+  //               : [...comment.userLikes, user?.uid],
+  //             userDislikes: comment.userDislikes.includes(user?.uid)
+  //               ? comment.userDislikes.filter((id) => id !== user?.uid)
+  //               : comment.userDislikes,
+  //           }
+  //         : comment
+  //     )
+  //   );
+  // };
 
-  const handleDislike = (comId) => {
-    setCommentsData(
-      commentsData.map((comment) =>
-        comment.comId === comId
-          ? {
-              ...comment,
-              dislikes: comment.userDislikes.includes(user?.uid)
-                ? comment.dislikes - 1
-                : comment.dislikes + 1,
-              likes: comment.userLikes.includes(user?.uid)
-                ? comment.likes - 1
-                : comment.likes,
-              userDislikes: comment.userDislikes.includes(user?.uid)
-                ? comment.userDislikes.filter((id) => id !== user?.uid)
-                : [...comment.userDislikes, user?.uid],
-              userLikes: comment.userLikes.includes(user?.uid)
-                ? comment.userLikes.filter((id) => id !== user?.uid)
-                : comment.userLikes,
-            }
-          : comment
-      )
-    );
-  };
+  // const handleDislike = (comId) => {
+  //   setCommentsData(
+  //     commentsData.map((comment) =>
+  //       comment.comId === comId
+  //         ? {
+  //             ...comment,
+  //             dislikes: comment.userDislikes.includes(user?.uid)
+  //               ? comment.dislikes - 1
+  //               : comment.dislikes + 1,
+  //             likes: comment.userLikes.includes(user?.uid)
+  //               ? comment.likes - 1
+  //               : comment.likes,
+  //             userDislikes: comment.userDislikes.includes(user?.uid)
+  //               ? comment.userDislikes.filter((id) => id !== user?.uid)
+  //               : [...comment.userDislikes, user?.uid],
+  //             userLikes: comment.userLikes.includes(user?.uid)
+  //               ? comment.userLikes.filter((id) => id !== user?.uid)
+  //               : comment.userLikes,
+  //           }
+  //         : comment
+  //     )
+  //   );
+  // };
 
-  const handleReply = (comId) => {
-    setReplyingTo(comId);
-    setCommentText(""); // Clear the text box for a new reply
-  };
+  // const handleReply = (comId) => {
+  //   setReplyingTo(comId);
+  //   setCommentText(""); // Clear the text box for a new reply
+  // };
 
   if (loading) return <div>Loading...</div>;
 
@@ -187,7 +187,9 @@ const App = () => {
           <CommentSection
             currentUser={{
               currentUserId: user?.uid || "guest",
-              currentUserImg: user?.photoURL || <PersonIcon />, // Show icon if no user photo
+              currentUserImg:
+                user?.photoURL ||
+                "https://ui-avatars.com/api/?name=Lily&background=random",
               currentUserProfile: user?.photoURL || "https://www.linkedin.com",
               currentUserFullName: user?.displayName || "Guest",
             }}
