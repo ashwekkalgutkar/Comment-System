@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { AppBar, Toolbar, Container, Button, Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Container,
+  Button,
+  Box,
+  Modal,
+  Typography,
+} from "@mui/material";
 import GoogleButton from "react-google-button";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
@@ -23,19 +31,19 @@ const App = () => {
       replies: [],
       likes: 0,
       dislikes: 0,
-      userLikes: [], // Track likes by users
-      userDislikes: [], // Track dislikes by users
-      timestamp: new Date().toISOString(), // Add timestamp here
+      userLikes: [],
+      userDislikes: [],
+      timestamp: new Date().toISOString(),
     },
   ]);
-  const [commentText, setCommentText] = useState("");
-  const [replyingTo, setReplyingTo] = useState(null); // Track which comment to reply to
+  const [openModal, setOpenModal] = useState(false);
 
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
         console.log("User signed in successfully", result.user);
+        setOpenModal(false);
       })
       .catch((error) => {
         console.error("Error during sign-in", error);
@@ -52,6 +60,9 @@ const App = () => {
         console.error("Error during sign-out", error);
       });
   };
+
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   if (loading) return <div>Loading...</div>;
 
@@ -74,7 +85,7 @@ const App = () => {
                 </div>
               ) : (
                 <GoogleButton
-                  onClick={signInWithGoogle}
+                  onClick={handleOpenModal}
                   className="flex items-center bg-white text-gray-700 border border-gray-300 rounded-md px-2 py-1 text-sm hover:bg-gray-100"
                   style={{ position: "absolute", top: "16px", right: "16px" }}
                 />
@@ -88,51 +99,79 @@ const App = () => {
           className="mt-8 shadow-md p-4 bg-white rounded-md"
           style={{ boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)" }}
         >
-          <CommentSection
-            currentUser={
-              user
-                ? {
-                    currentUserId: user.uid,
-                    currentUserImg:
-                      user.photoURL || "https://ui-avatars.com/api/?name=Guest",
-                    currentUserProfile:
-                      user.photoURL || "https://www.linkedin.com",
-                    currentUserFullName: user.displayName || "Guest",
-                  }
-                : null
-            }
-            advancedInput={true}
-            hrStyle={{ border: "0.5px solid #ff0072" }}
-            commentData={commentsData.map((comment) => ({
-              ...comment,
-              timestamp: formatDistanceToNow(new Date(comment.timestamp), {
-                addSuffix: true,
-              }),
-            }))}
-            logIn={{
-              loginLink: user ? null : "http://localhost:3001/",
-              signupLink: user ? null : "http://localhost:3001/",
-            }}
-            inputStyle={{ border: "1px solid rgb(208 208 208)" }}
-            formStyle={{ backgroundColor: "white" }}
-            submitBtnStyle={{
-              border: "1px solid black",
-              backgroundColor: "black",
-              padding: "7px 15px",
-            }}
-            cancelBtnStyle={{
-              border: "1px solid gray",
-              backgroundColor: "gray",
-              color: "white",
-              padding: "7px 15px",
-            }}
-            replyInputStyle={{
-              borderBottom: "1px solid black",
-              color: "black",
-            }}
-          />
+          {user ? (
+            <CommentSection
+              currentUser={{
+                currentUserId: user.uid,
+                currentUserImg:
+                  user.photoURL || "https://ui-avatars.com/api/?name=Guest",
+                currentUserProfile: user.photoURL || "https://www.linkedin.com",
+                currentUserFullName: user.displayName || "Guest",
+              }}
+              advancedInput={true}
+              hrStyle={{ border: "0.5px solid #ff0072" }}
+              commentData={commentsData.map((comment) => ({
+                ...comment,
+                timestamp: formatDistanceToNow(new Date(comment.timestamp), {
+                  addSuffix: true,
+                }),
+              }))}
+              inputStyle={{ border: "1px solid rgb(208, 208, 208)" }}
+              formStyle={{ backgroundColor: "white" }}
+              submitBtnStyle={{
+                border: "1px solid black",
+                backgroundColor: "black",
+                padding: "7px 15px",
+              }}
+              cancelBtnStyle={{
+                border: "1px solid gray",
+                backgroundColor: "gray",
+                color: "white",
+                padding: "7px 15px",
+              }}
+              replyInputStyle={{
+                borderBottom: "1px solid black",
+                color: "black",
+              }}
+            />
+          ) : (
+            <Typography variant="body1" align="center">
+              Please log in to view and post comments.
+            </Typography>
+          )}
         </Container>
       </Box>
+
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="login-modal"
+        aria-describedby="login-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography id="login-modal" variant="h6" component="h2">
+            Login Required
+          </Typography>
+          <Typography id="login-modal-description" sx={{ mt: 2 }}>
+            Please log in to view and post comments.
+          </Typography>
+          <GoogleButton
+            onClick={signInWithGoogle}
+            style={{ marginTop: "20px" }}
+          />
+        </Box>
+      </Modal>
     </div>
   );
 };
